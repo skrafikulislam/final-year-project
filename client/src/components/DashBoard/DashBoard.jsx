@@ -1,9 +1,13 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+// const apiKey = "a04ffaa7a94e4374a22144654231906";
+const temFatchingApiURL =
+  "http://api.weatherapi.com/v1/current.json?key=a04ffaa7a94e4374a22144654231906&q=kolkata";
 
 const DashBoard = () => {
   const [moisture, setMoisture] = useState("");
   const [showPopup, setShowPopup] = useState(false);
+  const [temp, setTemp] = useState("");
   const fetchMoistureData = async () => {
     try {
       const moistureData = await axios.get("http://127.0.0.1/get-sensor-data");
@@ -14,6 +18,7 @@ const DashBoard = () => {
   };
   useEffect(() => {
     fetchMoistureData();
+    fetchWeatherData();
   }, []);
 
   const handleYesClick = () => {
@@ -24,6 +29,11 @@ const DashBoard = () => {
   const handleNoClick = () => {
     setShowPopup(false);
     // Handle the "No" action here
+  };
+
+  const fetchWeatherData = async () => {
+    const weatherData = await axios.get(temFatchingApiURL);
+    setTemp(weatherData.data.current.temp_c);
   };
   return (
     <div>
@@ -40,7 +50,7 @@ const DashBoard = () => {
 
                 <div class="mt-1 flex items-center gap-x-2">
                   <h3 class="text-xl sm:text-2xl font-medium text-gray-600  ">
-                    37 Degree
+                    {temp} Degree
                   </h3>
                   <span class="flex items-center gap-x-1 text-green-600">
                     <svg
